@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+
+    <changeSet id="004-create-places-table" author="tourguide">
+        <createTable tableName="places">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="external_id" type="varchar(255)"/>
+            <column name="source_api" type="varchar(50)"/>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name_tr" type="varchar(255)"/>
+            <column name="name_en" type="varchar(255)"/>
+            <column name="category" type="varchar(100)"/>
+            <column name="latitude" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="longitude" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="text"/>
+            <column name="address" type="varchar(500)"/>
+            <column name="phone" type="varchar(30)"/>
+            <column name="website" type="varchar(500)"/>
+            <column name="opening_hours" type="text"/>
+            <column name="avg_rating" type="double" defaultValueNumeric="0"/>
+            <column name="review_count" type="integer" defaultValueNumeric="0"/>
+            <column name="photo_url" type="varchar(500)"/>
+            <column name="is_active" type="boolean" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp"/>
+        </createTable>
+
+        <createIndex tableName="places" indexName="idx_places_external_id">
+            <column name="external_id"/>
+        </createIndex>
+
+        <sql>CREATE INDEX idx_places_location ON places USING GIST (ST_MakePoint(longitude, latitude));</sql>
+    </changeSet>
+
+    <changeSet id="004-create-place-images-table" author="tourguide">
+        <createTable tableName="place_images">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="place_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image_url" type="varchar(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="uploaded_by" type="uuid"/>
+            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="place_images"
+                                 baseColumnNames="place_id"
+                                 referencedTableName="places"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_place_images_place"/>
+    </changeSet>
+
+    <changeSet id="004-add-favorites-place-fk" author="tourguide">
+        <addForeignKeyConstraint baseTableName="favorites"
+                                 baseColumnNames="place_id"
+                                 referencedTableName="places"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_favorites_place"/>
+    </changeSet>
+
+</databaseChangeLog>

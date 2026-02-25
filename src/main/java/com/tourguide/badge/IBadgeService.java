@@ -1,0 +1,22 @@
+package com.tourguide.badge;
+
+import com.tourguide.badge.dto.BadgeResponse;
+import com.tourguide.badge.dto.UserBadgeResponse;
+
+import java.util.List;
+import java.util.UUID;
+
+public interface IBadgeService {
+
+    List<BadgeResponse> getAllBadges(UUID userId);
+
+    List<UserBadgeResponse> getUserBadges(UUID userId);
+
+    void awardBadge(UUID userId, UUID badgeId);
+
+    Badge createBadge(String name, String description, String iconUrl);
+
+    Badge updateBadge(UUID badgeId, String name, String description, String iconUrl);
+
+    void softDeleteBadge(UUID badgeId);
+}

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+
+    <changeSet id="008-create-quests-table" author="tourguide">
+        <createTable tableName="quests">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="text"/>
+            <column name="exp_reward" type="integer" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="region" type="varchar(100)"/>
+            <column name="thumbnail_url" type="varchar(500)"/>
+            <column name="badge_id" type="uuid"/>
+            <column name="is_active" type="boolean" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="quests"
+                                 baseColumnNames="badge_id"
+                                 referencedTableName="badges"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_quests_badge"/>
+    </changeSet>
+
+    <changeSet id="008-create-quest-steps-table" author="tourguide">
+        <createTable tableName="quest_steps">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="quest_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="place_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="step_order" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hint" type="text"/>
+            <column name="requires_photo" type="boolean" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="confidence_threshold" type="double" defaultValueNumeric="0.80">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="quest_steps"
+                                 baseColumnNames="quest_id"
+                                 referencedTableName="quests"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_quest_steps_quest"/>
+
+        <addForeignKeyConstraint baseTableName="quest_steps"
+                                 baseColumnNames="place_id"
+                                 referencedTableName="places"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_quest_steps_place"/>
+    </changeSet>
+
+    <changeSet id="008-create-user-quests-table" author="tourguide">
+        <createTable tableName="user_quests">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quest_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(20)" defaultValue="IN_PROGRESS">
+                <constraints nullable="false"/>
+            </column>
+            <column name="started_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="completed_at" type="timestamp"/>
+        </createTable>
+
+        <addUniqueConstraint tableName="user_quests"
+                             columnNames="user_id, quest_id"
+                             constraintName="uk_user_quests"/>
+
+        <addForeignKeyConstraint baseTableName="user_quests"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_user_quests_user"/>
+
+        <addForeignKeyConstraint baseTableName="user_quests"
+                                 baseColumnNames="quest_id"
+                                 referencedTableName="quests"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_user_quests_quest"/>
+    </changeSet>
+
+    <changeSet id="008-create-quest-verifications-table" author="tourguide">
+        <createTable tableName="quest_verifications">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_quest_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="step_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="photo_url" type="varchar(500)"/>
+            <column name="latitude" type="double"/>
+            <column name="longitude" type="double"/>
+            <column name="status" type="varchar(20)" defaultValue="PENDING">
+                <constraints nullable="false"/>
+            </column>
+            <column name="confidence_score" type="double"/>
+            <column name="moderator_note" type="text"/>
+            <column name="exp_earned" type="integer" defaultValueNumeric="0"/>
+            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="quest_verifications"
+                                 baseColumnNames="user_quest_id"
+                                 referencedTableName="user_quests"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_verifications_user_quest"/>
+
+        <addForeignKeyConstraint baseTableName="quest_verifications"
+                                 baseColumnNames="step_id"
+                                 referencedTableName="quest_steps"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_verifications_step"/>
+
+        <addForeignKeyConstraint baseTableName="quest_verifications"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_verifications_user"/>
+    </changeSet>
+
+</databaseChangeLog>

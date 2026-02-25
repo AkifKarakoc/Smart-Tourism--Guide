@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+
+    <changeSet id="003-create-favorites-table" author="tourguide">
+        <createTable tableName="favorites">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="place_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="saved_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint tableName="favorites"
+                             columnNames="user_id, place_id"
+                             constraintName="uk_favorites_user_place"/>
+
+        <addForeignKeyConstraint baseTableName="favorites"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_favorites_user"/>
+    </changeSet>
+
+    <changeSet id="003-create-user-location-history" author="tourguide">
+        <createTable tableName="user_location_history">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="latitude" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="longitude" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="recorded_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="user_location_history"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_location_history_user"/>
+    </changeSet>
+
+</databaseChangeLog>

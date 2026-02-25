@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+
+    <changeSet id="012-add-indexes" author="tourguide">
+        <comment>Add performance indexes for frequently queried columns</comment>
+
+        <!-- favorites: user_id lookup -->
+        <createIndex indexName="idx_favorites_user_id" tableName="favorites">
+            <column name="user_id"/>
+        </createIndex>
+
+        <!-- reviews: place_id + status for approved review queries -->
+        <createIndex indexName="idx_reviews_place_status" tableName="reviews">
+            <column name="place_id"/>
+            <column name="status"/>
+        </createIndex>
+
+        <!-- todo_items: user_id for listing user's todos -->
+        <createIndex indexName="idx_todo_items_user_id" tableName="todo_items">
+            <column name="user_id"/>
+        </createIndex>
+
+        <!-- user_badges: user_id for listing user badges -->
+        <createIndex indexName="idx_user_badges_user_id" tableName="user_badges">
+            <column name="user_id"/>
+        </createIndex>
+
+        <!-- user_quests: user_id for listing user quests -->
+        <createIndex indexName="idx_user_quests_user_id" tableName="user_quests">
+            <column name="user_id"/>
+        </createIndex>
+
+        <!-- quest_verifications: user_quest_id for verification lookups -->
+        <createIndex indexName="idx_quest_verifications_user_quest" tableName="quest_verifications">
+            <column name="user_quest_id"/>
+        </createIndex>
+
+        <!-- notifications: user_id + created_at for ordered notification listing -->
+        <createIndex indexName="idx_notifications_user_created" tableName="notifications">
+            <column name="user_id"/>
+            <column name="created_at" descending="true"/>
+        </createIndex>
+
+        <!-- notifications: user_id + is_read for unread count -->
+        <createIndex indexName="idx_notifications_user_read" tableName="notifications">
+            <column name="user_id"/>
+            <column name="is_read"/>
+        </createIndex>
+
+        <!-- chat_sessions: user_id for listing user sessions -->
+        <createIndex indexName="idx_chat_sessions_user_id" tableName="chat_sessions">
+            <column name="user_id"/>
+        </createIndex>
+
+        <!-- chat_messages: session_id + sent_at for ordered message listing -->
+        <createIndex indexName="idx_chat_messages_session_sent" tableName="chat_messages">
+            <column name="session_id"/>
+            <column name="sent_at"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

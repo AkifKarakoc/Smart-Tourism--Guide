@@ -1,0 +1,1072 @@
+{
+  "info": {
+    "name": "TourGuide Backend API",
+    "description": "Smart Tourism Guide — Full Endpoint Test Collection\n\n## Test Sırası\n1. Auth (SuperAdmin Login)\n2. SuperAdmin (Rol Atama)\n3. Content Editor (İçerik Oluşturma)\n4. Auth (Tourist Register / Login)\n5. Places (Yer Arama)\n6. Reviews (Yorum)\n7. Favorites (Favoriler)\n8. Todos (Liste)\n9. Badges (Rozetler)\n10. Routes (Rotalar)\n11. Quests (Görevler)\n12. Chat (AI Sohbet)\n13. Image (Görüntü Tanıma)\n14. Notifications (Bildirimler)\n15. Moderator (İçerik Moderasyonu)\n16. Auth (Logout)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url",           "value": "http://localhost:8080/api/v1",  "type": "string" },
+    { "key": "superadmin_token",   "value": "",                       "type": "string" },
+    { "key": "tourist_token",      "value": "",                       "type": "string" },
+    { "key": "moderator_token",    "value": "",                       "type": "string" },
+    { "key": "editor_token",       "value": "",                       "type": "string" },
+    { "key": "place_id",           "value": "",                       "type": "string" },
+    { "key": "quest_id",           "value": "",                       "type": "string" },
+    { "key": "step_id",            "value": "",                       "type": "string" },
+    { "key": "badge_id",           "value": "",                       "type": "string" },
+    { "key": "route_id",           "value": "",                       "type": "string" },
+    { "key": "review_id",          "value": "",                       "type": "string" },
+    { "key": "favorite_id",        "value": "",                       "type": "string" },
+    { "key": "todo_id",            "value": "",                       "type": "string" },
+    { "key": "chat_session_id",    "value": "",                       "type": "string" },
+    { "key": "notification_id",    "value": "",                       "type": "string" },
+    { "key": "verification_id",    "value": "",                       "type": "string" },
+    { "key": "tourist_user_id",    "value": "",                       "type": "string" },
+    { "key": "moderator_user_id",  "value": "",                       "type": "string" },
+    { "key": "editor_user_id",     "value": "",                       "type": "string" }
+  ],
+  "item": [
+
+    {
+      "name": "1. Auth",
+      "item": [
+        {
+          "name": "1.1 SuperAdmin Login",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "pm.collectionVariables.set('superadmin_token', res.accessToken);",
+                "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                "pm.test('accessToken exists', () => pm.expect(res.accessToken).to.be.a('string'));"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"superadmin@tourguide.com\",\n  \"password\": \"Admin@1234\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth","login"] }
+          }
+        },
+        {
+          "name": "1.2 Tourist Register",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "pm.collectionVariables.set('tourist_token', res.accessToken);",
+                "pm.collectionVariables.set('tourist_user_id', res.userId);",
+                "pm.test('Status 201', () => pm.response.to.have.status(201));"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"tourist@test.com\",\n  \"password\": \"Test1234\",\n  \"firstName\": \"Ali\",\n  \"lastName\": \"Yılmaz\",\n  \"phoneNumber\": \"05551234567\",\n  \"preferredLanguage\": \"tr\",\n  \"ageGroup\": \"18-25\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth","register"] }
+          }
+        },
+        {
+          "name": "1.3 Moderator Register",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "pm.collectionVariables.set('moderator_user_id', res.userId);",
+                "pm.test('Status 201', () => pm.response.to.have.status(201));"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"moderator@test.com\",\n  \"password\": \"Test1234\",\n  \"firstName\": \"Mehmet\",\n  \"lastName\": \"Demir\",\n  \"preferredLanguage\": \"tr\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth","register"] }
+          }
+        },
+        {
+          "name": "1.4 Editor Register",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "pm.collectionVariables.set('editor_user_id', res.userId);",
+                "pm.test('Status 201', () => pm.response.to.have.status(201));"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"editor@test.com\",\n  \"password\": \"Test1234\",\n  \"firstName\": \"Ayşe\",\n  \"lastName\": \"Çelik\",\n  \"preferredLanguage\": \"tr\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth","register"] }
+          }
+        },
+        {
+          "name": "1.5 Token Refresh",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"REFRESH_TOKEN_BURAYA\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/refresh", "host": ["{{base_url}}"], "path": ["auth","refresh"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "2. SuperAdmin — Kullanıcı Yönetimi",
+      "item": [
+        {
+          "name": "2.1 Tüm Kullanıcıları Listele",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{superadmin_token}}" }],
+            "url": { "raw": "{{base_url}}/admin/superadmin/users", "host": ["{{base_url}}"], "path": ["admin","superadmin","users"] }
+          }
+        },
+        {
+          "name": "2.2 Moderator Rolü Ata",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{superadmin_token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"MODERATOR\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/admin/superadmin/users/{{moderator_user_id}}/role", "host": ["{{base_url}}"], "path": ["admin","superadmin","users","{{moderator_user_id}}","role"] }
+          }
+        },
+        {
+          "name": "2.3 Editor Rolü Ata",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test('Status 200', () => pm.response.to.have.status(200));"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{superadmin_token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"CONTENT_EDITOR\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/admin/superadmin/users/{{editor_user_id}}/role", "host": ["{{base_url}}"], "path": ["admin","superadmin","users","{{editor_user_id}}","role"] }
+          }
+        },
+        {
+          "name": "2.4 Moderator Login (Token Al)",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "pm.collectionVariables.set('moderator_token', res.accessToken);",
+                "pm.test('Status 200', () => pm.response.to.have.status(200));"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"moderator@test.com\",\n  \"password\": \"Test1234\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth","login"] }
+          }
+        },
+        {
+          "name": "2.5 Editor Login (Token Al)",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "pm.collectionVariables.set('editor_token', res.accessToken);",
+                "pm.test('Status 200', () => pm.response.to.have.status(200));"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"editor@test.com\",\n  \"password\": \"Test1234\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth","login"] }
+          }
+        },
+        {
+          "name": "2.6 Kullanıcı Deaktive Et (Tourist)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{superadmin_token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isActive\": false\n}"
+            },
+            "url": { "raw": "{{base_url}}/admin/superadmin/users/{{tourist_user_id}}/status", "host": ["{{base_url}}"], "path": ["admin","superadmin","users","{{tourist_user_id}}","status"] }
+          }
+        },
+        {
+          "name": "2.7 Kullanıcı Aktive Et (Tourist) — Geri Al",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{superadmin_token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isActive\": true\n}"
+            },
+            "url": { "raw": "{{base_url}}/admin/superadmin/users/{{tourist_user_id}}/status", "host": ["{{base_url}}"], "path": ["admin","superadmin","users","{{tourist_user_id}}","status"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "3. Content Editor — İçerik Oluşturma",
+      "item": [
+        {
+          "name": "3.1 Badge Oluştur",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "pm.collectionVariables.set('badge_id', res.id);",
+                "pm.test('Status 201', () => pm.response.to.have.status(201));"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{editor_token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"İzmir Kaşifi\",\n  \"description\": \"İzmir'deki 5 tarihi mekânı ziyaret et\",\n  \"iconUrl\": \"badges/izmir-explorer.png\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/admin/editor/badges", "host": ["{{base_url}}"], "path": ["admin","editor","badges"] }
+          }
+        },
+        {
+          "name": "3.2 Badge Güncelle",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{editor_token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"İzmir Kaşifi v2\",\n  \"description\": \"İzmir'deki 5 tarihi mekânı ziyaret et (güncel)\",\n  \"iconUrl\": \"badges/izmir-explorer-v2.png\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/admin/editor/badges/{{badge_id}}", "host": ["{{base_url}}"], "path": ["admin","editor","badges","{{badge_id}}"] }
+          }
+        },
+        {
+          "name": "3.3 Place Oluştur",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "pm.collectionVariables.set('place_id', res.id);",
+                "pm.test('Status 201', () => pm.response.to.have.status(201));"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{editor_token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Efes Antik Kenti\",\n  \"nameTr\": \"Efes Antik Kenti\",\n  \"nameEn\": \"Ancient City of Ephesus\",\n  \"category\": \"tarihi_yer\",\n  \"latitude\": 37.9395,\n  \"longitude\": 27.3417,\n  \"description\": \"Dünyanın en iyi korunmuş antik kentlerinden biri.\",\n  \"address\": \"Efes, Selçuk/İzmir\",\n  \"phone\": \"+90 232 892 6010\",\n  \"website\": \"https://www.kultur.gov.tr\",\n  \"openingHours\": \"08:00-19:00\",\n  \"photoUrl\": \"places/efes.jpg\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/admin/editor/places", "host": ["{{base_url}}"], "path": ["admin","editor","places"] }
+          }
+        },
+        {
+          "name": "3.4 Place Güncelle",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{editor_token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"openingHours\": \"08:00-20:00\",\n  \"description\": \"Dünyanın en iyi korunmuş antik kentlerinden biri (güncel açıklama).\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/admin/editor/places/{{place_id}}", "host": ["{{base_url}}"], "path": ["admin","editor","places","{{place_id}}"] }
+          }
+        },
+        {
+          "name": "3.5 Quest Oluştur",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "pm.collectionVariables.set('quest_id', res.id);",
+                "pm.test('Status 201', () => pm.response.to.have.status(201));"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{editor_token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Efes Keşfi\",\n  \"description\": \"Efes Antik Kenti'ni keşfet ve tarihi dokun.\",\n  \"expReward\": 150,\n  \"region\": \"İzmir\",\n  \"badgeId\": \"{{badge_id}}\",\n  \"steps\": [\n    {\n      \"placeId\": \"{{place_id}}\",\n      \"stepOrder\": 1,\n      \"hint\": \"Büyük tiyatroya git.\",\n      \"requiresPhoto\": true,\n      \"confidenceThreshold\": 0.75\n    }\n  ]\n}"
+            },
+            "url": { "raw": "{{base_url}}/admin/editor/quests", "host": ["{{base_url}}"], "path": ["admin","editor","quests"] }
+          }
+        },
+        {
+          "name": "3.6 Route Oluştur",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "pm.collectionVariables.set('route_id', res.id);",
+                "pm.test('Status 201', () => pm.response.to.have.status(201));"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{editor_token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"İzmir Tarihi Tur\",\n  \"description\": \"İzmir'in en önemli tarihi noktaları.\",\n  \"centerLatitude\": 38.4192,\n  \"centerLongitude\": 27.1287,\n  \"radiusMeters\": 10000,\n  \"estimatedMinutes\": 180,\n  \"expReward\": 200,\n  \"places\": [\n    {\n      \"placeId\": \"{{place_id}}\",\n      \"stopOrder\": 1,\n      \"estimatedMinutes\": 90,\n      \"notes\": \"Büyük tiyatroyu ziyaret edin.\"\n    }\n  ]\n}"
+            },
+            "url": { "raw": "{{base_url}}/admin/editor/routes", "host": ["{{base_url}}"], "path": ["admin","editor","routes"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "4. User — Profil",
+      "item": [
+        {
+          "name": "4.1 Profilimi Getir",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "url": { "raw": "{{base_url}}/users/me", "host": ["{{base_url}}"], "path": ["users","me"] }
+          }
+        },
+        {
+          "name": "4.2 Profil Güncelle",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{tourist_token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Ali\",\n  \"lastName\": \"Yılmaz\",\n  \"phoneNumber\": \"05559876543\",\n  \"preferredLanguage\": \"en\",\n  \"ageGroup\": \"25-35\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/users/me", "host": ["{{base_url}}"], "path": ["users","me"] }
+          }
+        },
+        {
+          "name": "4.3 Profil Fotoğrafı Yükle",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "body": {
+              "mode": "formdata",
+              "formdata": [{ "key": "file", "type": "file", "src": [] }]
+            },
+            "url": { "raw": "{{base_url}}/users/me/photo", "host": ["{{base_url}}"], "path": ["users","me","photo"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "5. Places — Mekanlar",
+      "item": [
+        {
+          "name": "5.1 Yakındaki Mekanları Getir",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "url": {
+              "raw": "{{base_url}}/places/nearby?latitude=37.9395&longitude=27.3417&radius=5000&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["places","nearby"],
+              "query": [
+                { "key": "latitude",  "value": "37.9395" },
+                { "key": "longitude", "value": "27.3417" },
+                { "key": "radius",    "value": "5000" },
+                { "key": "limit",     "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "5.2 Mekân Ara",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "url": {
+              "raw": "{{base_url}}/places/search?query=Efes",
+              "host": ["{{base_url}}"],
+              "path": ["places","search"],
+              "query": [{ "key": "query", "value": "Efes" }]
+            }
+          }
+        },
+        {
+          "name": "5.3 Mekân Detayı",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "url": { "raw": "{{base_url}}/places/{{place_id}}", "host": ["{{base_url}}"], "path": ["places","{{place_id}}"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "6. Reviews — Yorumlar",
+      "item": [
+        {
+          "name": "6.1 Yorum Yaz",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "pm.collectionVariables.set('review_id', res.id);",
+                "pm.test('Status 201', () => pm.response.to.have.status(201));"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{tourist_token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 5,\n  \"comment\": \"Muhteşem bir tarihi alan, kesinlikle görülmeli!\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/places/{{place_id}}/reviews", "host": ["{{base_url}}"], "path": ["places","{{place_id}}","reviews"] }
+          }
+        },
+        {
+          "name": "6.2 Yorum Listele (APPROVED olanlar)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "url": { "raw": "{{base_url}}/places/{{place_id}}/reviews", "host": ["{{base_url}}"], "path": ["places","{{place_id}}","reviews"] }
+          }
+        },
+        {
+          "name": "6.3 Yorum Sil",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "url": { "raw": "{{base_url}}/places/{{place_id}}/reviews/{{review_id}}", "host": ["{{base_url}}"], "path": ["places","{{place_id}}","reviews","{{review_id}}"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "7. Favorites — Favoriler",
+      "item": [
+        {
+          "name": "7.1 Favoriye Ekle",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "pm.collectionVariables.set('favorite_id', res.id);",
+                "pm.test('Status 201', () => pm.response.to.have.status(201));"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{tourist_token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"placeId\": \"{{place_id}}\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/users/me/favorites", "host": ["{{base_url}}"], "path": ["users","me","favorites"] }
+          }
+        },
+        {
+          "name": "7.2 Favorilerim",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "url": { "raw": "{{base_url}}/users/me/favorites", "host": ["{{base_url}}"], "path": ["users","me","favorites"] }
+          }
+        },
+        {
+          "name": "7.3 Favoriden Kaldır",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "url": { "raw": "{{base_url}}/users/me/favorites/{{favorite_id}}", "host": ["{{base_url}}"], "path": ["users","me","favorites","{{favorite_id}}"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "8. Todos — Ziyaret Listesi",
+      "item": [
+        {
+          "name": "8.1 Todo Oluştur",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "pm.collectionVariables.set('todo_id', res.id);",
+                "pm.test('Status 201', () => pm.response.to.have.status(201));"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{tourist_token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"placeId\": \"{{place_id}}\",\n  \"note\": \"Efes'e gitmeden önce bilet ayarla.\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/todos", "host": ["{{base_url}}"], "path": ["todos"] }
+          }
+        },
+        {
+          "name": "8.2 Todolarımı Listele",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "url": { "raw": "{{base_url}}/todos", "host": ["{{base_url}}"], "path": ["todos"] }
+          }
+        },
+        {
+          "name": "8.3 Todo Güncelle (Tamamlandı)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{tourist_token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isCompleted\": true,\n  \"note\": \"Bilet alındı, gidildi!\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/todos/{{todo_id}}", "host": ["{{base_url}}"], "path": ["todos","{{todo_id}}"] }
+          }
+        },
+        {
+          "name": "8.4 Todo Sil",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "url": { "raw": "{{base_url}}/todos/{{todo_id}}", "host": ["{{base_url}}"], "path": ["todos","{{todo_id}}"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "9. Badges — Rozetler",
+      "item": [
+        {
+          "name": "9.1 Tüm Rozetleri Listele",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "url": { "raw": "{{base_url}}/badges", "host": ["{{base_url}}"], "path": ["badges"] }
+          }
+        },
+        {
+          "name": "9.2 Benim Rozetlerim",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "url": { "raw": "{{base_url}}/users/me/badges", "host": ["{{base_url}}"], "path": ["users","me","badges"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "10. Routes — Rotalar",
+      "item": [
+        {
+          "name": "10.1 Rotaları Listele (Yakın)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "url": {
+              "raw": "{{base_url}}/routes?latitude=38.4192&longitude=27.1287",
+              "host": ["{{base_url}}"],
+              "path": ["routes"],
+              "query": [
+                { "key": "latitude",  "value": "38.4192" },
+                { "key": "longitude", "value": "27.1287" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "10.2 Rota Detayı",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "url": { "raw": "{{base_url}}/routes/{{route_id}}", "host": ["{{base_url}}"], "path": ["routes","{{route_id}}"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "11. Quests — Görevler",
+      "item": [
+        {
+          "name": "11.1 Görevleri Listele",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "url": { "raw": "{{base_url}}/quests", "host": ["{{base_url}}"], "path": ["quests"] }
+          }
+        },
+        {
+          "name": "11.2 Görev Detayı",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "if (res.steps && res.steps.length > 0) {",
+                "  pm.collectionVariables.set('step_id', res.steps[0].id);",
+                "}",
+                "pm.test('Status 200', () => pm.response.to.have.status(200));"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "url": { "raw": "{{base_url}}/quests/{{quest_id}}", "host": ["{{base_url}}"], "path": ["quests","{{quest_id}}"] }
+          }
+        },
+        {
+          "name": "11.3 Görevi Başlat",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "url": { "raw": "{{base_url}}/quests/{{quest_id}}/start", "host": ["{{base_url}}"], "path": ["quests","{{quest_id}}","start"] }
+          }
+        },
+        {
+          "name": "11.4 Adımı Doğrula (GPS + Fotoğraf)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "latitude",  "value": "37.9395", "type": "text" },
+                { "key": "longitude", "value": "27.3417", "type": "text" },
+                { "key": "photo",     "type": "file",    "src": [] }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/quests/{{quest_id}}/steps/{{step_id}}/verify", "host": ["{{base_url}}"], "path": ["quests","{{quest_id}}","steps","{{step_id}}","verify"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "12. Chat — AI Sohbet",
+      "item": [
+        {
+          "name": "12.1 Oturum Oluştur",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "pm.collectionVariables.set('chat_session_id', res.sessionId);",
+                "pm.test('Status 201', () => pm.response.to.have.status(201));"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{tourist_token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"language\": \"tr\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/chat/sessions", "host": ["{{base_url}}"], "path": ["chat","sessions"] }
+          }
+        },
+        {
+          "name": "12.2 Mesaj Gönder",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{tourist_token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Efes Antik Kenti hakkında bilgi verir misin?\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/chat/sessions/{{chat_session_id}}/messages", "host": ["{{base_url}}"], "path": ["chat","sessions","{{chat_session_id}}","messages"] }
+          }
+        },
+        {
+          "name": "12.3 Mesajları Getir",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "url": { "raw": "{{base_url}}/chat/sessions/{{chat_session_id}}/messages", "host": ["{{base_url}}"], "path": ["chat","sessions","{{chat_session_id}}","messages"] }
+          }
+        },
+        {
+          "name": "12.4 Oturumu Sonlandır",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "url": { "raw": "{{base_url}}/chat/sessions/{{chat_session_id}}", "host": ["{{base_url}}"], "path": ["chat","sessions","{{chat_session_id}}"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "13. Image — Görüntü Tanıma",
+      "item": [
+        {
+          "name": "13.1 Görüntü ile Yer Tanı",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "latitude",  "value": "37.9395", "type": "text" },
+                { "key": "longitude", "value": "27.3417", "type": "text" },
+                { "key": "photo",     "type": "file",    "src": [] }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/images/identify", "host": ["{{base_url}}"], "path": ["images","identify"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "14. Notifications — Bildirimler",
+      "item": [
+        {
+          "name": "14.1 Cihaz Token Kaydet (Push)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{tourist_token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"fcm-device-token-example-12345\",\n  \"platform\": \"android\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/notifications/device-token", "host": ["{{base_url}}"], "path": ["notifications","device-token"] }
+          }
+        },
+        {
+          "name": "14.2 Bildirimlerimi Getir",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "if (res.notifications && res.notifications.length > 0) {",
+                "  pm.collectionVariables.set('notification_id', res.notifications[0].id);",
+                "}",
+                "pm.test('Status 200', () => pm.response.to.have.status(200));"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "url": {
+              "raw": "{{base_url}}/notifications?page=0&size=20",
+              "host": ["{{base_url}}"],
+              "path": ["notifications"],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "14.3 Bildirimi Okundu İşaretle",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "url": { "raw": "{{base_url}}/notifications/{{notification_id}}/read", "host": ["{{base_url}}"], "path": ["notifications","{{notification_id}}","read"] }
+          }
+        },
+        {
+          "name": "14.4 Tümünü Okundu İşaretle",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "url": { "raw": "{{base_url}}/notifications/read-all", "host": ["{{base_url}}"], "path": ["notifications","read-all"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "15. Moderator — İçerik Moderasyonu",
+      "item": [
+        {
+          "name": "15.1 Bekleyen Yorumları Getir",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "if (res && res.length > 0) {",
+                "  pm.collectionVariables.set('review_id', res[0].id);",
+                "}",
+                "pm.test('Status 200', () => pm.response.to.have.status(200));"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{moderator_token}}" }],
+            "url": { "raw": "{{base_url}}/admin/moderator/reviews", "host": ["{{base_url}}"], "path": ["admin","moderator","reviews"] }
+          }
+        },
+        {
+          "name": "15.2 Yorum Onayla",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{moderator_token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"APPROVED\",\n  \"moderatorNote\": \"Uygun içerik, onaylandı.\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/admin/moderator/reviews/{{review_id}}", "host": ["{{base_url}}"], "path": ["admin","moderator","reviews","{{review_id}}"] }
+          }
+        },
+        {
+          "name": "15.3 Yorum Reddet",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{moderator_token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"REJECTED\",\n  \"moderatorNote\": \"Kurallara aykırı içerik.\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/admin/moderator/reviews/{{review_id}}", "host": ["{{base_url}}"], "path": ["admin","moderator","reviews","{{review_id}}"] }
+          }
+        },
+        {
+          "name": "15.4 Bekleyen Görev Doğrulamalarını Getir",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var res = pm.response.json();",
+                "if (res && res.length > 0) {",
+                "  pm.collectionVariables.set('verification_id', res[0].id);",
+                "}",
+                "pm.test('Status 200', () => pm.response.to.have.status(200));"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{moderator_token}}" }],
+            "url": { "raw": "{{base_url}}/admin/moderator/verifications", "host": ["{{base_url}}"], "path": ["admin","moderator","verifications"] }
+          }
+        },
+        {
+          "name": "15.5 Görev Adımı Onayla",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{moderator_token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"APPROVED\",\n  \"moderatorNote\": \"Fotoğraf uygun görünüyor.\",\n  \"expEarned\": 10\n}"
+            },
+            "url": { "raw": "{{base_url}}/admin/moderator/verifications/{{verification_id}}", "host": ["{{base_url}}"], "path": ["admin","moderator","verifications","{{verification_id}}"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "16. Content Editor — Silme İşlemleri",
+      "item": [
+        {
+          "name": "16.1 Badge Sil",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{editor_token}}" }],
+            "url": { "raw": "{{base_url}}/admin/editor/badges/{{badge_id}}", "host": ["{{base_url}}"], "path": ["admin","editor","badges","{{badge_id}}"] }
+          }
+        },
+        {
+          "name": "16.2 Quest Sil",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{editor_token}}" }],
+            "url": { "raw": "{{base_url}}/admin/editor/quests/{{quest_id}}", "host": ["{{base_url}}"], "path": ["admin","editor","quests","{{quest_id}}"] }
+          }
+        },
+        {
+          "name": "16.3 Route Sil",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{editor_token}}" }],
+            "url": { "raw": "{{base_url}}/admin/editor/routes/{{route_id}}", "host": ["{{base_url}}"], "path": ["admin","editor","routes","{{route_id}}"] }
+          }
+        },
+        {
+          "name": "16.4 Place Sil",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{editor_token}}" }],
+            "url": { "raw": "{{base_url}}/admin/editor/places/{{place_id}}", "host": ["{{base_url}}"], "path": ["admin","editor","places","{{place_id}}"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "17. Auth — Logout",
+      "item": [
+        {
+          "name": "17.1 Tourist Logout",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{tourist_token}}" }],
+            "url": { "raw": "{{base_url}}/auth/logout", "host": ["{{base_url}}"], "path": ["auth","logout"] }
+          }
+        },
+        {
+          "name": "17.2 SuperAdmin Logout",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{superadmin_token}}" }],
+            "url": { "raw": "{{base_url}}/auth/logout", "host": ["{{base_url}}"], "path": ["auth","logout"] }
+          }
+        }
+      ]
+    }
+
+  ]
+}

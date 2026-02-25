@@ -1,0 +1,51 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tourguide
+    username: tourguide
+    password: tourguide123
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    show-sql: true
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+# MinIO Configuration
+minio:
+  endpoint: http://localhost:9000
+  access-key: minioadmin
+  secret-key: minioadmin123
+  buckets:
+    profile-photos: profile-photos
+    place-images: place-images
+    badge-icons: badge-icons
+    quest-verifications: quest-verifications
+
+# JWT Configuration
+jwt:
+  secret: a3f1b2c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2
+  access-token-expiration: 86400000
+  refresh-token-expiration: 604800000
+
+# AI Service Configuration
+ai-service:
+  base-url: http://localhost:8000
+  timeout: 30000
+
+# Pilot Zone Configuration (Izmir bounds)
+pilot-zone:
+  enabled: true
+  min-latitude: 38.20
+  max-latitude: 38.60
+  min-longitude: 26.80
+  max-longitude: 27.30
+  center-latitude: 38.4192
+  center-longitude: 27.1287
+
+logging:
+  level:
+    com.tourguide: DEBUG
+    org.hibernate.SQL: DEBUG

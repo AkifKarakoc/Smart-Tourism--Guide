@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+
+    <changeSet id="002-create-users-table" author="tourguide">
+        <createTable tableName="users">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_users_email"/>
+            </column>
+            <column name="password_hash" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone_number" type="varchar(20)"/>
+            <column name="profile_photo_url" type="varchar(500)"/>
+            <column name="preferred_language" type="varchar(5)" defaultValue="tr"/>
+            <column name="age_group" type="varchar(20)"/>
+            <column name="role" type="varchar(20)" defaultValue="TOURIST">
+                <constraints nullable="false"/>
+            </column>
+            <column name="exp_points" type="integer" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="level" type="integer" defaultValueNumeric="1">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_active" type="boolean" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

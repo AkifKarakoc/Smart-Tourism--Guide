@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+
+    <include file="db/changelog/changes/001-enable-postgis.xml"/>
+    <include file="db/changelog/changes/002-create-users-table.xml"/>
+    <include file="db/changelog/changes/003-create-favorites-table.xml"/>
+    <include file="db/changelog/changes/004-create-places-table.xml"/>
+    <include file="db/changelog/changes/005-create-reviews-table.xml"/>
+    <include file="db/changelog/changes/006-create-todos-table.xml"/>
+    <include file="db/changelog/changes/007-create-badges-tables.xml"/>
+    <include file="db/changelog/changes/008-create-quest-tables.xml"/>
+    <include file="db/changelog/changes/009-create-route-tables.xml"/>
+    <include file="db/changelog/changes/010-create-chat-tables.xml"/>
+    <include file="db/changelog/changes/011-create-notification-tables.xml"/>
+    <include file="db/changelog/changes/012-add-indexes.xml"/>
+
+</databaseChangeLog>
